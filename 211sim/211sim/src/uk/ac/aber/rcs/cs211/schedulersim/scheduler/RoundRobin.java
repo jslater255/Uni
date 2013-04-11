@@ -4,47 +4,67 @@
  */
 package uk.ac.aber.rcs.cs211.schedulersim.scheduler;
 
-import uk.ac.aber.rcs.cs211.schedulersim.Job;
-import uk.ac.aber.rcs.cs211.schedulersim.Scheduler;
+import java.util.*;
+import uk.ac.aber.rcs.cs211.schedulersim.*;
+
 
 /**
  *
  * @author Slater
  */
-public class RoundRobin implements Scheduler{
+public class RoundRobin implements Scheduler {
 
-    public RoundRobin(){
-        
+    protected ArrayList<Job> queue;
+    private int numberOfJobs;
+    private int count;
+
+    public RoundRobin() {
+        this.queue = new ArrayList<Job>();
+        this.numberOfJobs = 0;
+        this.count = 0;
     }
+
     
-    @Override
     public Job getNextJob() throws SchedulerException {
-        throw new UnsupportedOperationException("Not supported yet.");
+        Job lastJobReturned;
+		if (this.numberOfJobs<1) throw new SchedulerException("Empty Queue");
+                if(count >= numberOfJobs){
+                    count = 0;
+                }
+		lastJobReturned = (Job)this.queue.get(count);
+                count++;
+                
+                    //lastJob = lastJobReturned;
+                    return lastJobReturned;
     }
 
-    @Override
     public void addNewJob(Job job) throws SchedulerException {
-        throw new UnsupportedOperationException("Not supported yet.");
+        if (this.queue.contains(job)) throw new SchedulerException("Job already on Queue");
+		this.queue.add(this.numberOfJobs, job);
+		this.numberOfJobs++;
     }
 
-    @Override
     public void returnJob(Job job) throws SchedulerException {
-        throw new UnsupportedOperationException("Not supported yet.");
+       if (!this.queue.contains(job)) throw new SchedulerException("Job not on Queue");
+		// nothing to do in this implementation.
     }
 
-    @Override
     public void removeJob(Job job) throws SchedulerException {
-        throw new UnsupportedOperationException("Not supported yet.");
+       if (!this.queue.contains(job)) throw new SchedulerException("Job not on Queue");
+		this.queue.remove(job);
+		this.numberOfJobs--;
     }
 
-    @Override
     public void reset() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        this.queue.clear();
+		this.numberOfJobs=0;
     }
 
-    @Override
     public Job[] getJobList() {
-        throw new UnsupportedOperationException("Not supported yet.");
+       Job[] jobs = new Job[queue.size()];
+		for (int i=0; i<queue.size(); i++) {
+			jobs[i]=this.queue.get(i);
+		}
+		return jobs;
     }
-    
 }
