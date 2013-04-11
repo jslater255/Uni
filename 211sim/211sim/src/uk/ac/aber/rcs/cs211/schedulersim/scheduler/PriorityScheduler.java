@@ -23,11 +23,12 @@ public class PriorityScheduler implements Scheduler {
     }
 
     public Job getNextJob() throws SchedulerException {
-        Job lastJobReturned = queue.get(0);
+        if (this.numberOfJobs<1) throw new SchedulerException("Empty Queue");
+        Job lastJobReturned = (Job)queue.get(0);
        
         for(int i = 1; i < numberOfJobs; i++){
             if(lastJobReturned.getPriority() > queue.get(i).getPriority()){
-                lastJobReturned = queue.get(i);
+                lastJobReturned = (Job)queue.get(i);
             }
         }
         return lastJobReturned;
