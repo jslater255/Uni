@@ -35,10 +35,13 @@ public class ShortestJobFirst implements Scheduler {
         if (this.numberOfJobs < 1) {
             throw new SchedulerException("Empty Queue");
         }
-
+        // Start by takeing the first job in the queue.
+        // Without this it will compare null and fail.
         Job shortestJobReturned = (Job) queue.get(0);
-
+        
+        //Loop through everything comparing the length of each job.
         for (int i = 1; i < numberOfJobs; i++) {
+            //If the job length is shorter then make this the new shortest Job
             if (shortestJobReturned.getLength() > queue.get(i).getLength()) {
                 shortestJobReturned = (Job) queue.get(i);
             }

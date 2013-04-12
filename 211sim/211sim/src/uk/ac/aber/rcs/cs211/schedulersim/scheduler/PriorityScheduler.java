@@ -22,18 +22,33 @@ public class PriorityScheduler implements Scheduler {
         this.numberOfJobs = 0;
     }
 
+    /**
+     * Each Job has been assigned a fixed priority rank to other jobs, and the
+     * scheduler gets the highest priority job to return. Lower priority
+     * processes get interrupted by incoming higher priority processes. Filters
+     * through the jobs finding the highest priority job using the
+     * getPriority().
+     *
+     *
+     * @return
+     * @throws SchedulerException
+     */
     public Job getNextJob() throws SchedulerException {
         if (this.numberOfJobs < 1) {
             throw new SchedulerException("Empty Queue");
         }
-        Job lastJobReturned = (Job) queue.get(0);
+        // Sets up with the first job in the queue.
+        Job highestPriority = (Job) queue.get(0);
 
+        // Gets each job from the queue compares the priority of each and if it 
+        // is lower then the previous then set this as the highest priority 
+        // job to return.
         for (int i = 1; i < numberOfJobs; i++) {
-            if (lastJobReturned.getPriority() > queue.get(i).getPriority()) {
-                lastJobReturned = (Job) queue.get(i);
+            if (highestPriority.getPriority() > queue.get(i).getPriority()) {
+                highestPriority = (Job) queue.get(i);
             }
         }
-        return lastJobReturned;
+        return highestPriority;
     }
 
     public void addNewJob(Job job) throws SchedulerException {
