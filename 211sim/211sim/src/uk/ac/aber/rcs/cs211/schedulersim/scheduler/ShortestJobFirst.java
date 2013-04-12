@@ -30,7 +30,7 @@ public class ShortestJobFirst implements Scheduler {
         Job shortestJobReturned = (Job) queue.get(0);
 
         for (int i = 1; i < numberOfJobs; i++) {
-            if (shortestJobReturned.getPriority() > queue.get(i).getPriority()) {
+            if (shortestJobReturned.getLength() > queue.get(i).getLength()) {
                 shortestJobReturned = (Job) queue.get(i);
             }
         }
