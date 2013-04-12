@@ -22,6 +22,15 @@ public class ShortestJobFirst implements Scheduler {
         this.numberOfJobs = 0;
     }
 
+      /**
+     * With this strategy the scheduler arranges processes with the shortest job
+     * to be next in the queue. This requires advanced knowledge or estimations
+     * about the time required for a process to complete. This method filters
+     * through all the jobs in the queue and returns the shortest job every time. 
+     *
+     * @return the shortest job.
+     * @throws SchedulerException
+     */
     public Job getNextJob() throws SchedulerException {
         if (this.numberOfJobs < 1) {
             throw new SchedulerException("Empty Queue");
