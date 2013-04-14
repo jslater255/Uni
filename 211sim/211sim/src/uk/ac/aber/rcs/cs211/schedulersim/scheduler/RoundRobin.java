@@ -23,18 +23,40 @@ public class RoundRobin implements Scheduler {
         this.count = 0;
     }
 
+<<<<<<< HEAD
     public Job getNextJob() throws SchedulerException {
         Job lastJobReturned;
+=======
+    /**
+     * The scheduler assigns a fixed time unit per process, and cycles through
+     * them. In the Round Robin it sends each job changing every request. Once
+     * it sends one it changes the count ready to send the next in the queue, if
+     * the count reaches the number of jobs inside the queue it resets back to
+     * zero.
+     *
+     * @return returns the next job in the queue
+     * @throws SchedulerException
+     */
+    public Job getNextJob() throws SchedulerException {
+        Job jobToReturn;
+>>>>>>> more changes
         if (this.numberOfJobs < 1) {
             throw new SchedulerException("Empty Queue");
         }
         if (count >= numberOfJobs) {
             count = 0;
         }
+<<<<<<< HEAD
         lastJobReturned = (Job) this.queue.get(count);
         count++;
 
         return lastJobReturned;
+=======
+        jobToReturn = (Job) this.queue.get(count);
+        count++;
+
+        return jobToReturn;
+>>>>>>> more changes
     }
 
     public void addNewJob(Job job) throws SchedulerException {
