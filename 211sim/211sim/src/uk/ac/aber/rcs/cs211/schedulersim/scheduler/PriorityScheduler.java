@@ -23,9 +23,11 @@ public class PriorityScheduler implements Scheduler {
     }
 
     /**
-     * Each Job has been assigned a fixed priority rank to other jobs, and the
+     * Each Job has been assigned a fixed priority rank, I will also add on the blocked time, the
      * scheduler gets the highest priority job to return. Lower priority
-     * processes get interrupted by incoming higher priority processes. Filters
+     * processes get interrupted by incoming higher priority processes but also take into account the blocked time. 
+     * this will help not saturate any bigger or less priority jobs 
+     * Filters
      * through the jobs finding the highest priority job using the
      * getPriority().
      *
@@ -40,11 +42,11 @@ public class PriorityScheduler implements Scheduler {
         // Sets up with the first job in the queue.
         Job highestPriority = (Job) queue.get(0);
 
-        // Gets each job from the queue compares the priority of each and if it 
+        // Gets each job from the queue compares the priority and the time it has been blocked of each and if it 
         // is lower then the previous then set this as the highest priority 
         // job to return.
         for (int i = 1; i < numberOfJobs; i++) {
-            if (highestPriority.getPriority() > queue.get(i).getPriority()) {
+            if ((highestPriority.getPriority() + highestPriority.getBlockedTime()) > (queue.get(i).getPriority()) + queue.get(i).getBlockedTime()) {
                 highestPriority = (Job) queue.get(i);
             }
         }
