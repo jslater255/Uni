@@ -46,7 +46,7 @@ public class PriorityScheduler implements Scheduler {
         // is lower then the previous then set this as the highest priority 
         // job to return.
         for (int i = 1; i < numberOfJobs; i++) {
-            if ((highestPriority.getPriority() + highestPriority.getBlockedTime()) > (queue.get(i).getPriority()) + queue.get(i).getBlockedTime()) {
+            if ((highestPriority.getPriority()) > (queue.get(i).getPriority())){
                 highestPriority = (Job) queue.get(i);
             }
         }
