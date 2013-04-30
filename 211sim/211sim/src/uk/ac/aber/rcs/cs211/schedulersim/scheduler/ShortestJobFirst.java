@@ -16,10 +16,12 @@ public class ShortestJobFirst implements Scheduler {
 
     protected ArrayList<Job> shortlist;
     private int numberOfJobs;
+    private boolean beenInserted;
 
     public ShortestJobFirst() {
         this.shortlist = new ArrayList<Job>();
         this.numberOfJobs = 0;
+        this.beenInserted = false;
     }
 
     /**
@@ -33,30 +35,37 @@ public class ShortestJobFirst implements Scheduler {
      * @throws SchedulerException
      */
     public Job getNextJob() throws SchedulerException {
+        Job lastJobReturned;
         if (this.numberOfJobs < 1) {
             throw new SchedulerException("Empty Queue");
         }
-        // Start by takeing the first job in the shortlist.
-        // Without this it will compare null and fail.
-        Job shortestJobReturned = (Job) shortlist.get(0);
-
-        //Loop through everything comparing the length of each job.
-        for (int i = 1; i < numberOfJobs; i++) {
-            //If the job length is shorter then make this the new shortest Job
-            if (shortestJobReturned.getLength() > shortlist.get(i).getLength()) {
-                shortestJobReturned = (Job) shortlist.get(i);
-            }
-        }
-        return shortestJobReturned;
+        lastJobReturned = (Job) this.shortlist.get(0);
+        return lastJobReturned;
     }
 
     public void addNewJob(Job job) throws SchedulerException {
         if (this.shortlist.contains(job)) {
             throw new SchedulerException("Job already on Queue");
+        } 
+        
+        beenInserted = false;
+        int count = 0;
+        
+        if(this.shortlist.isEmpty()){
+            this.shortlist.add(job);
+        } else{
+            while(!beenInserted){
+                if(this.shortlist.get(count).getLength() > job.getLength()){
+                    this.shortlist.add(count, job);
+                    beenInserted = true;
+                }else{
+                     this.shortlist.add(job);
+                     beenInserted = true;
+                }
+                count++;
+            }
         }
-
-        this.shortlist.add(this.numberOfJobs, job);
-        this.numberOfJobs++;
+        numberOfJobs++;
     }
 
     public void returnJob(Job job) throws SchedulerException {

@@ -14,12 +14,16 @@ import uk.ac.aber.rcs.cs211.schedulersim.Scheduler;
  */
 public class PriorityScheduler implements Scheduler {
 
-    protected ArrayList<Job> queue;
+    protected ArrayList<Job> priorityQueue;
     private int numberOfJobs;
+    private boolean beenInserted;
+    private int count;
 
     public PriorityScheduler() {
-        this.queue = new ArrayList<Job>();
+        this.priorityQueue = new ArrayList<Job>();
         this.numberOfJobs = 0;
+        this.beenInserted = false;
+        this.count = 0;
     }
 
     /**
@@ -39,51 +43,59 @@ public class PriorityScheduler implements Scheduler {
         if (this.numberOfJobs < 1) {
             throw new SchedulerException("Empty Queue");
         }
-        // Sets up with the first job in the queue.
-        Job highestPriority = (Job) queue.get(0);
+        Job highestPriority = (Job) priorityQueue.get(0);
 
-        // Gets each job from the queue compares the priority and the time it has been blocked of each and if it 
-        // is lower then the previous then set this as the highest priority 
-        // job to return.
-        for (int i = 1; i < numberOfJobs; i++) {
-            if ((highestPriority.getPriority()) > (queue.get(i).getPriority())){
-                highestPriority = (Job) queue.get(i);
-            }
-        }
         return highestPriority;
     }
 
     public void addNewJob(Job job) throws SchedulerException {
-        if (this.queue.contains(job)) {
+        if (this.priorityQueue.contains(job)) {
             throw new SchedulerException("Job already on Queue");
+        } 
+        
+        beenInserted = false;
+        count = 0;
+        
+        if(this.priorityQueue.isEmpty()){
+            this.priorityQueue.add(job);
+        } else{
+            while(!beenInserted){
+                if(this.priorityQueue.get(count).getPriority() > job.getPriority()){
+                    this.priorityQueue.add(count, job);
+                    beenInserted = true;
+                }else{
+                     this.priorityQueue.add(job);
+                     beenInserted = true;
+                }
+                count++;
+            }
         }
-        this.queue.add(this.numberOfJobs, job);
-        this.numberOfJobs++;
+        numberOfJobs++;
     }
 
     public void returnJob(Job job) throws SchedulerException {
-        if (!this.queue.contains(job)) {
+        if (!this.priorityQueue.contains(job)) {
             throw new SchedulerException("Job not on Queue");
         }
     }
 
     public void removeJob(Job job) throws SchedulerException {
-        if (!this.queue.contains(job)) {
+        if (!this.priorityQueue.contains(job)) {
             throw new SchedulerException("Job not on Queue");
         }
-        this.queue.remove(job);
+        this.priorityQueue.remove(job);
         this.numberOfJobs--;
     }
 
     public void reset() {
-        this.queue.clear();
+        this.priorityQueue.clear();
         this.numberOfJobs = 0;
     }
 
     public Job[] getJobList() {
-        Job[] jobs = new Job[queue.size()];
-        for (int i = 0; i < queue.size(); i++) {
-            jobs[i] = this.queue.get(i);
+        Job[] jobs = new Job[priorityQueue.size()];
+        for (int i = 0; i < priorityQueue.size(); i++) {
+            jobs[i] = this.priorityQueue.get(i);
         }
         return jobs;
     }
